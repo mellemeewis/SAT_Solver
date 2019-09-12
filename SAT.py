@@ -6,7 +6,9 @@ if __name__ == "__main__":
   if ARGV_LEN == 2:
       filename = sys.argv[1]
       filename = f"sodoku's_dimac/{filename}"
-      read_dimacs(filename)
+      clause_list = read_dimacs(filename)[0]
+      variable_list = read_dimacs(filename)[1]
+      
   else:
     if ARGV_LEN > 0:
       print("usage error: {} <file>".format(sys.argv[0]))
