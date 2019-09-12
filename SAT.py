@@ -12,3 +12,5 @@ if __name__ == "__main__":
       print("usage error: {} <file>".format(sys.argv[0]))
     else:
       print("usage error")
+
+      # hoi
