@@ -11,6 +11,7 @@ def read_dimacs(filename):
         # Print them out.
         print(clause)
 
+
     except Exception as e:
       # Report error.
       print(e)
