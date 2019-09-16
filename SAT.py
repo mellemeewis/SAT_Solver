@@ -1,5 +1,7 @@
 import sys
 from helpers.read_dimacs import read_dimacs
+from pure_literal import check_for_pure_literals
+from tautology import check_for_tautology
 
 def main():
      ARGV_LEN = len(sys.argv)
@@ -19,12 +21,13 @@ def main():
          print("usage error")
 
 def sat_solver(clause_list, variable_list):
+    check_for_tautology(clause_list)
     check_for_unit_clauses(clause_list, variable_list)
+    set_literal_truth_values(clause_list, variable_list)
+    check_for_pure_literals(clause_list, variable_list)
     set_literal_truth_values(clause_list, variable_list)
     for clause in clause_list:
         print(clause)
-
-
 
 def check_for_unit_clauses(clause_list, variable_list):
     clauses_to_remove = []
@@ -49,12 +52,13 @@ def set_literal_truth_values(clause_list, variable_list):
     clauses_to_remove = []
     for variable in variable_list:
         if variable.truth_value == False:
-
             for clause in clause_list:
                 literals_to_remove = []
                 for literal in clause.list:
                     if abs(literal.value) == variable.literal:
                         if literal.value < 0:
+                            if clause in clauses_to_remove:
+                                continue
                             clauses_to_remove.append(clause)
                         else:
                             literals_to_remove.append(literal)
@@ -69,6 +73,8 @@ def set_literal_truth_values(clause_list, variable_list):
                         if literal.value < 0:
                             literals_to_remove.append(literal)
                         else:
+                            if clause in clauses_to_remove:
+                                continue
                             clauses_to_remove.append(clause)
                 for literal in literals_to_remove:
                     clause.list.remove(literal)
