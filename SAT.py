@@ -4,7 +4,6 @@ from helpers.read_dimacs import read_dimacs
 if __name__ == "__main__":
   main()
 
-#   hoiiii
 
 def main():
      ARGV_LEN = len(sys.argv)
