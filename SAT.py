@@ -13,7 +13,7 @@ def main():
          input = read_dimacs(filename)
          clause_list = input[0]
          variable_list = input[1]
-
+         check_for_tautology(clause_list)
          sat_solver(clause_list, variable_list)
          for variable in variable_list:
              # print(variable)
@@ -27,10 +27,9 @@ def main():
          print("usage error")
 
 def sat_solver(clause_list, variable_list):
-    print("Start, check for tautology\n")
+    print("Start\n")
     # for clause in clause_list:
     #     print("clause:", clause)
-    check_for_tautology(clause_list)
     # print("\nchecked for tautology, check for unit:")
     # for clause in clause_list:
     #     print("clause:", clause)
@@ -72,7 +71,6 @@ def sat_solver(clause_list, variable_list):
 
 
 
-
 def make_split(clause_list, variable_list):
     if len(clause_list[0].list) > 0:
         variable_value = abs(clause_list[0].list[0].value)
@@ -106,6 +104,7 @@ def check_for_unit_clauses(clause_list, variable_list):
     for clause in clauses_to_remove:
         clause_list.remove(clause)
     return changes_made
+
 
 
 def set_literal_truth_values(clause_list, variable_list):
