@@ -10,10 +10,7 @@ def main():
          filename = f"sodoku's_dimac/{filename}"
          clause_list = read_dimacs(filename)
          solution = dp(test(clause_list, None), set())
-         print("end",solution)
-         for sol in solution:
-             if sol > 0:
-                 print(sol)
+         print("Solution = ", solution)
 
      else:
        if ARGV_LEN > 0:
