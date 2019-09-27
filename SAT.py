@@ -1,7 +1,7 @@
 import sys
 from read_dimacs import read_dimacs
 from dp import dp
-from dp import test
+from dp import update_clause_list
 
 def main():
      ARGV_LEN = len(sys.argv)
@@ -9,7 +9,7 @@ def main():
          filename = sys.argv[1]
          filename = f"sodoku's_dimac/{filename}"
          clause_list = read_dimacs(filename)
-         solution = dp(test(clause_list, None), set())
+         solution = dp(update_clause_list(clause_list, None), set())
          print("Solution = ", solution)
 
      else:
