@@ -155,6 +155,7 @@ def DLIS(clause_list):
     literals = findliterals(clause_list)
     literals.sort()
     cp_list, cn_list, cp_cn_list = counter(clause_list, literals)
+
     if max(cp_list) > max(cn_list):
         index = cp_list.index(max(cp_list))
     else:
