@@ -1,6 +1,16 @@
+###############################################################################
+# TASK 1: SAT solver			                                              #
+# Building a SAT solver with two different heuristics      			          #
+# Group 23                                                                    #
+# Melle Meewis en Jikke van den Ende                                          #
+###############################################################################
+
+# Import libraries
 import copy
 import random
 
+
+# Davis Putnam algorithm based on certain heuristic that determines how to split
 def dp(func, variable_values):
     clause_list = func
     variable_values = copy.deepcopy(variable_values)
@@ -28,52 +38,18 @@ def dp(func, variable_values):
                 answer = [var for var in list(variable_values) if var > 0]
                 return answer
 
-    # pure_literals = find_pure_literals(clause_list)
-    # for literal in pure_literals:
-    #     clause_list = update_clause_list(clause_list, literal)
-    #     variable_values.add(literal)
-    #     if clause_list == -1:
-    #         variable_values.remove(literal)
-    #         return None
-    #     elif len(clause_list) == 0:
-    #         answer = [var for var in list(variable_values) if var > 0]
-    #         return answer
-    #
-    # units = find_units(clause_list)
-    # for unit in units:
-    #     clause_list = update_clause_list(clause_list, unit)
-    #     variable_values.add(unit)
-    #     if clause_list == -1:
-    #         variable_values.remove(unit)
-    #         return None
-    #     elif len(clause_list) == 0:
-    #         answer = [var for var in list(variable_values) if var > 0]
-    #         return answer
+    split_value = JW_twosided(clause_list)
+    print('Split value is', split_value)
 
-    # advance = True
-    # while advance == True:
-    #     advance = False
-    #     for clause in [*clause_list]:
-    #         if len(clause) == 1:
-    #             advance = True
-    #             clause_list = update_clause_list(clause_list, clause[0])
-    #             variable_values.add(clause[0])
-    #             if clause_list == -1:
-    #                 variable_values.remove(clause[0])
-    #                 return None
-    #             elif len(clause_list) == 0:
-    #                 answer = [var for var in list(variable_values) if var > 0]
-    #                 return answer
-
-    # split_value = clause_list[0][0]
-    split_value = DLIS(clause_list)
     variable_values.add(split_value)
     solution = dp(update_clause_list(clause_list, split_value), variable_values)
     if not solution:
+        print('Conflict!')
         variable_values.remove(split_value)
         variable_values.add(-split_value)
         solution = dp(update_clause_list(clause_list, -split_value), variable_values)
     return solution
+
 
 def find_pure_literals(clause_list):
     if clause_list == -1:
@@ -84,11 +60,13 @@ def find_pure_literals(clause_list):
     pure_literals = set([literal for literal in all_literals if -literal not in all_literals])
     return list(pure_literals)
 
+
 def find_units(clause_list):
     if clause_list == -1:
         return []
     units = [clause[0] for clause in clause_list if len(clause) == 1]
     return units
+
 
 def update_clause_list(clause_list, value):
     if value is None or value == 0:
@@ -101,10 +79,12 @@ def update_clause_list(clause_list, value):
         return -1
     return clause_list
 
+
 def random_split(clause_list):
     random_clause = clause_list[random.randint(0, (len(clause_list) - 1))]
     random_literal = random_clause[random.randint(0, len(random_clause) - 1)]
     return random_literal
+
 
 def findliterals(clause_list):
     literals = []
@@ -135,6 +115,7 @@ def counter(clause_list, literals):
 
     return list_of_cp, list_of_cn, list_of_cp_and_cn
 
+
 def DLCS(clause_list):
     # Finding all possible literals
     literals = findliterals(clause_list)
@@ -162,6 +143,55 @@ def DLIS(clause_list):
     cp = cp_list[index]
     cn = cn_list[index]
     if cp > cn:
+        return literals[index]
+    else:
+        return 0 - literals[index]
+
+
+def JW_onesided(clause_list):
+    literals = findliterals(clause_list)
+    literals.sort()
+
+    all_J = []
+
+    for literal in literals:
+        j = 0
+        for clause in clause_list:
+            if literal in clause:
+                j = j + (2**(0 - len(clause)))
+        all_J.append(j)
+
+    max_j = max(all_J)
+
+    index = all_J.index(max_j)
+
+    return literals[index]
+
+
+def JW_twosided(clause_list):
+    literals = findliterals(clause_list)
+    literals.sort()
+
+    all_J = []
+    all_J_positief = []
+    all_J_negatief = []
+
+    for literal in literals:
+        j_pos = 0
+        j_neg = 0
+        for clause in clause_list:
+            if literal in clause:
+                j_pos = j_pos + (2**(0 - len(clause)))
+            elif 0 - literal in clause:
+                j_neg = j_neg + (2**(0 - len(clause)))
+        all_J.append(j_pos + j_neg)
+        all_J_positief.append(j_pos)
+        all_J_negatief.append(j_neg)
+
+    max_j = max(all_J)
+
+    index = all_J.index(max_j)
+    if all_J_positief[index] >= all_J_negatief[index]:
         return literals[index]
     else:
         return 0 - literals[index]
