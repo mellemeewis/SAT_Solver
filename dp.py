@@ -38,7 +38,7 @@ def dp(func, variable_values):
                 answer = [var for var in list(variable_values) if var > 0]
                 return answer
 
-    split_value = JW_twosided(clause_list)
+    split_value = JW_onesided(clause_list)
     print('Split value is', split_value)
 
     variable_values.add(split_value)
