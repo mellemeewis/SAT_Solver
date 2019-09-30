@@ -9,46 +9,69 @@
 import copy
 import random
 
-
+class Solver():
+    def __init__(self):
+        self.splits = 0
+        self.conflicts = 0
 # Davis Putnam algorithm based on certain heuristic that determines how to split
-def dp(func, variable_values):
-    clause_list = func
-    variable_values = copy.deepcopy(variable_values)
+    def dp(self, func, variable_values, strategy):
+        clause_list = func
+        variable_values = copy.deepcopy(variable_values)
 
-    if clause_list == -1:
-        return None
-    elif len(clause_list) == 0:
-        answer = [var for var in list(variable_values) if var > 0]
-        return answer
+        if clause_list == -1:
+            return None
+        elif len(clause_list) == 0:
+            answer_all = list(variable_values)
+            answer_pos = [var for var in answer_all if var > 0]
+            answer = [answer_pos, answer_all, self.splits, self.conflicts]
+            return answer
 
-    advance = True
-    while advance == True:
-        advance = False
-        units = find_units(clause_list)
-        pure_literals = find_pure_literals(clause_list)
-        literals = units + pure_literals
-        for literal in literals:
-            advance = True
-            clause_list = update_clause_list(clause_list, literal)
-            variable_values.add(literal)
-            if clause_list == -1:
-                variable_values.remove(literal)
-                return None
-            elif len(clause_list) == 0:
-                answer = [var for var in list(variable_values) if var > 0]
-                return answer
+        advance = True
+        while advance == True:
+            advance = False
+            units = find_units(clause_list)
+            pure_literals = find_pure_literals(clause_list)
+            literals = units + pure_literals
+            for literal in literals:
+                advance = True
+                clause_list = update_clause_list(clause_list, literal)
+                variable_values.add(literal)
+                if clause_list == -1:
+                    variable_values.remove(literal)
+                    return None
+                elif len(clause_list) == 0:
+                    answer_all = list(variable_values)
+                    answer_pos = [var for var in answer_all if var > 0]
+                    answer = [answer_pos, answer_all, self.splits, self.conflicts]
+                    return answer
 
-    split_value = JW_onesided(clause_list)
-    print('Split value is', split_value)
+        split_value = split(clause_list, strategy)
+        # print('Split value is', split_value)
+        self.splits += 1
 
-    variable_values.add(split_value)
-    solution = dp(update_clause_list(clause_list, split_value), variable_values)
-    if not solution:
-        print('Conflict!')
-        variable_values.remove(split_value)
-        variable_values.add(-split_value)
-        solution = dp(update_clause_list(clause_list, -split_value), variable_values)
-    return solution
+        variable_values.add(split_value)
+        solution = self.dp(update_clause_list(clause_list, split_value), variable_values, strategy)
+
+        if not solution:
+            # print('Conflict!')
+            self.conflicts += 1
+            variable_values.remove(split_value)
+            variable_values.add(-split_value)
+            solution = self.dp(update_clause_list(clause_list, -split_value), variable_values, strategy)
+        return solution
+
+def split(clause_list, strategy):
+    if strategy == "DLCS":
+        return DLCS(clause_list)
+    if strategy == "DLIS":
+        return DLIS(clause_list)
+    if strategy == "Random":
+        return random_split(clause_list)
+    if stategy == "JW_onesided":
+        return JW_onesided(clause_list)
+    if strategy == "MOM":
+        return MOM(clause_list)
+
 
 
 def find_pure_literals(clause_list):
