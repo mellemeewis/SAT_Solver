@@ -31,6 +31,7 @@ class Solver():
 
         advance = True
         while advance == True:
+            print("HI")
             advance = False
             units = find_units(clause_list)
             pure_literals = find_pure_literals(clause_list)
@@ -225,6 +226,7 @@ def JW_twosided(clause_list):
         return 0 - literals[index]
 
 def MOM(clause_list):
+    print("start")
     lengths = []
     for clause in clause_list:
         lengths.append(len(clause))
@@ -238,6 +240,8 @@ def MOM(clause_list):
     literals = findliterals(small_clauses)
     literals.sort()
 
+    print("1")
+
     MOMs = []
     for literal in literals:
         fx = 0
@@ -250,6 +254,8 @@ def MOM(clause_list):
         mom = (fx + f_x) * 2**2 + fx + f_x
         MOMs.append(mom)
 
+    print("2")
     maximum = max(MOMs)
     index = MOMs.index(maximum)
+    print("finsh")
     return literals[index]
