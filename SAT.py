@@ -46,9 +46,13 @@ def main():
 def write_output(solution, strategy, startfile, startfile_path):
     date_time = str(datetime.datetime.now())
     date_time = date_time[:19]
-    filename_output = f"results/Solution {startfile}, {strategy}, {date_time}.txt"
+    filename_output = f"results/{startfile}, {strategy}, {date_time}.txt"
     values_pos = solution[0]
+    if values_pos == None:
+        values_pos = []
     values_all = solution[1]
+    if values_all == None:
+        values_all = []
     number_of_splits = solution[2]
     number_of_conflicts = solution[3]
 
@@ -60,7 +64,9 @@ def write_output(solution, strategy, startfile, startfile_path):
 
         f.write(f"Number of splits: {number_of_splits}\n")
         f.write(f"Number of conflicts: {number_of_conflicts}\n\n")
-        f.write(f"Values:\n")
+        f.write(f"Positve truth values:\n")
+        if values_pos == []:
+            f.write("No solution found.")
         for value in values_pos:
             f.write(f"{value}\n")
     f.close()

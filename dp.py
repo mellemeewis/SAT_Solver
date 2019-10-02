@@ -15,10 +15,13 @@ class Solver():
         self.conflicts = 0
 # Davis Putnam algorithm based on certain heuristic that determines how to split
     def dp(self, func, variable_values, strategy):
+        print("Start new recursion")
+        print(self.splits)
         clause_list = func
         variable_values = copy.deepcopy(variable_values)
 
         if clause_list == -1:
+            return [None, None, self.splits, self.conflicts]
             return None
         elif len(clause_list) == 0:
             answer_all = list(variable_values)
@@ -38,6 +41,7 @@ class Solver():
                 variable_values.add(literal)
                 if clause_list == -1:
                     variable_values.remove(literal)
+                    return [None, None, self.splits, self.conflicts]
                     return None
                 elif len(clause_list) == 0:
                     answer_all = list(variable_values)
@@ -52,7 +56,7 @@ class Solver():
         variable_values.add(split_value)
         solution = self.dp(update_clause_list(clause_list, split_value), variable_values, strategy)
 
-        if not solution:
+        if not solution[0]:
             # print('Conflict!')
             self.conflicts += 1
             variable_values.remove(split_value)
@@ -67,7 +71,7 @@ def split(clause_list, strategy):
         return DLIS(clause_list)
     if strategy == "Random":
         return random_split(clause_list)
-    if stategy == "JW_onesided":
+    if strategy == "JW_onesided":
         return JW_onesided(clause_list)
     if strategy == "MOM":
         return MOM(clause_list)
@@ -219,3 +223,33 @@ def JW_twosided(clause_list):
         return literals[index]
     else:
         return 0 - literals[index]
+
+def MOM(clause_list):
+    lengths = []
+    for clause in clause_list:
+        lengths.append(len(clause))
+    minimum = min(lengths)
+
+    small_clauses = []
+    for clause in clause_list:
+        if len(clause) == minimum:
+            small_clauses.append(clause)
+
+    literals = findliterals(small_clauses)
+    literals.sort()
+
+    MOMs = []
+    for literal in literals:
+        fx = 0
+        f_x = 0
+        for clause in small_clauses:
+            if literal in clause:
+                fx = fx + 1
+            if 0 - literal in clause:
+                f_x = f_x + 1
+        mom = (fx + f_x) * 2**2 + fx + f_x
+        MOMs.append(mom)
+
+    maximum = max(MOMs)
+    index = MOMs.index(maximum)
+    return literals[index]
