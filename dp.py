@@ -17,10 +17,11 @@ class Solver():
 # Davis Putnam algorithm based on certain heuristic that determines how to split
     def dp(self, func, variable_values, strategy):
         print("Start new recursion")
+        print("Splits:", self.splits)
         if self.splits == 1000:
             print("NO SOLUTION FOUND")
             print("Splits:", self.splits)
-            print("Conflicts:", self.conflict)
+            print("Conflicts:", self.conflicts)
             sys.exit(1)
         clause_list = func
         variable_values = copy.deepcopy(variable_values)
