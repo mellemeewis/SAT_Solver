@@ -8,6 +8,7 @@
 # Import libraries
 import copy
 import random
+import sys
 
 class Solver():
     def __init__(self):
@@ -20,6 +21,7 @@ class Solver():
             print("NO SOLUTION FOUND")
             print("Splits:", self.splits)
             print("Conflicts:", self.conflict)
+            sys.exit(1)
         clause_list = func
         variable_values = copy.deepcopy(variable_values)
 
