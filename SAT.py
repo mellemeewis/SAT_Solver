@@ -44,9 +44,7 @@ def main():
 
 
 def write_output(solution, strategy, startfile, startfile_path):
-    date_time = str(datetime.datetime.now())
-    date_time = date_time[:19]
-    filename_output = f"results/{startfile}, {strategy}, {date_time}.txt"
+    filename_output = f"results/{startfile},{strategy}.txt"
     values_pos = solution[0]
     if values_pos == None:
         values_pos = []
