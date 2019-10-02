@@ -119,7 +119,7 @@ def findliterals(clause_list):
     for clause in clause_list:
         for literal in clause:
             if abs(literal) not in literals:
-                literals.append(literal)
+                literals.append(abs(literal))
     return literals
 
 

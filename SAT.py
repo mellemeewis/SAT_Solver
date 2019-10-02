@@ -55,8 +55,7 @@ def write_output(solution, strategy, startfile, startfile_path):
     number_of_conflicts = solution[3]
 
     with open(filename_output, "w") as f:
-        f.write(f"Date and time: {date_time}\n"
-                f"Startfile: {startfile_path}\n"
+        f.write(f"Startfile: {startfile_path}\n"
                 f"Strategy: {strategy}\n\n")
 
 
