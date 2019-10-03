@@ -1,4 +1,4 @@
-Startfile: sudoku's_dimac/sudoku
+Startfile: data/sudoku's_dimac/sudoku
 Strategy: MOM
 
 Number of splits: 8
