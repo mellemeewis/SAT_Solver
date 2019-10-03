@@ -36,8 +36,6 @@ def main():
         except Exception as e:
             print(e)
             sys.exit(1)
-
-        # clause_list = transform_clauses(clause_list)
         print("SAT Solver strated with strategy:", strategy)
         solution = davis_putnam(clause_list, strategy)
         write_output(solution, strategy, filename, filename_path)
@@ -57,8 +55,6 @@ def write_output(solution, strategy, startfile, startfile_path):
     with open(filename_output, "w") as f:
         f.write(f"Startfile: {startfile_path}\n"
                 f"Strategy: {strategy}\n\n")
-
-
         f.write(f"Number of splits: {number_of_splits}\n")
         f.write(f"Number of conflicts: {number_of_conflicts}\n\n")
         f.write(f"Positve truth values:\n")
@@ -74,11 +70,8 @@ def write_output(solution, strategy, startfile, startfile_path):
         for value in values_all:
             f.write(f"{value} 0\n")
     f.close()
-
     print(f"Open {filename_output} to see results.")
     print(f"Open {filename_dimacs} to see output dimacs file.")
-
-
 
 def davis_putnam(clause_list, strategy):
     clause_list = remove_tautologies(clause_list)
