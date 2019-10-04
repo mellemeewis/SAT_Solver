@@ -12,11 +12,12 @@ class Solver():
         self.splits = 0
         self.conflicts = 0
 # Davis Putnam algorithm based on certain heuristic that determines how to split
-    def dp(self, func, variable_values, strategy):
+    def dp(self, func, variable_values, strategy, split_limit):
         print("Start new recursion")
         print("Splits:", self.splits)
-        if self.splits == 1000:
-            print("NO SOLUTION FOUND")
+        print("Conflicts:", self.conflicts)
+        if self.splits == split_limit:
+            print("SPLIT LIMIT REACHED, NO SOLUTION FOUND")
             print("Splits:", self.splits)
             print("Conflicts:", self.conflicts)
             sys.exit(1)
@@ -53,16 +54,14 @@ class Solver():
                     return answer
 
         split_value = split(clause_list, strategy)
-        # print('Split value is', split_value)
         self.splits += 1
 
         variable_values.add(split_value)
-        solution = self.dp(update_clause_list(clause_list, split_value), variable_values, strategy)
+        solution = self.dp(update_clause_list(clause_list, split_value), variable_values, strategy, split_limit)
 
         if not solution[0]:
-            # print('Conflict!')
             self.conflicts += 1
             variable_values.remove(split_value)
             variable_values.add(-split_value)
-            solution = self.dp(update_clause_list(clause_list, -split_value), variable_values, strategy)
+            solution = self.dp(update_clause_list(clause_list, -split_value), variable_values, strategy, split_limit)
         return solution

@@ -16,7 +16,6 @@ from helpers.update_clause_list import update_clause_list
 from helpers.write_output import write_output
 from helpers.remove_tautologies import remove_tautologies
 
-
 def main():
     ARGV_LEN = len(sys.argv)
     if ARGV_LEN != 3:
@@ -44,14 +43,25 @@ def main():
         except Exception as e:
             print(e)
             sys.exit(1)
-        print("SAT Solver strated with strategy:", strategy)
-        solution = davis_putnam(clause_list, strategy)
+
+        split_limit = input("What is the maximum number of splits you would like "
+                            "to allow before the program quits itself?\n"
+                            "Choose -1 if you don't want to set a limit.\n")
+        try:
+            split_limit = int(split_limit)
+        except Exception as e:
+            print("No valid split limit chosen:")
+            print(e)
+            sys.exit(1)
+
+        print(f"SAT Solver strated with strategy '{strategy}' and max. number of splits {split_limit}")
+        solution = davis_putnam(clause_list, strategy, split_limit)
         write_output(solution, strategy, filename, filename_path)
 
-def davis_putnam(clause_list, strategy):
+def davis_putnam(clause_list, strategy, split_limit):
     clause_list = remove_tautologies(clause_list)
     solver = Solver()
-    solution = solver.dp(update_clause_list(clause_list, None), set(), strategy)
+    solution = solver.dp(update_clause_list(clause_list, None), set(), strategy, split_limit)
     return solution
 
 if __name__ == "__main__":
